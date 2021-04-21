@@ -34,7 +34,7 @@ url_new = 'https://megapesni.net/download.php?id=225480' # mp3
 
 start_time = time.time()
 res = requests.get('http://pr-webinar.miem.vmnet.top/transcribe',
-                           json={'url': url_new, 'user_ID': 'Sam Jason1', 'audio_format': "mp3"})
+                           json={'url': url_new, 'user_ID': 'Sam Jason1', 'audio_format': "mp3"})  # посылается запрос
 
 new_res = ''
 numeration = 0
