@@ -39,8 +39,9 @@ res = requests.get('http://pr-webinar.miem.vmnet.top/transcribe',
 new_res = ''
 numeration = 0
 while numeration == 0:
-    time.sleep(10)
-    new_res = requests.get('http://pr-webinar.miem.vmnet.top/get', json={'new_request': res.json()['id_number']})  # ###
+    time.sleep(20)
+    new_res = requests.get('http://pr-webinar.miem.vmnet.top/get', json={'new_request': res.json()['id_number']})  
+    # Каждые 20 секунд посылается новый запрос для проверки, готов ли итоговый файл или еще нет
     if new_res.json()['link'] != 'Wait, please':
         numeration = 1
     print(new_res.json()['link'])
