@@ -1,15 +1,3 @@
-# import glob
-# import os
-# import subprocess
-# import tarfile
-# import copy
-#
-# import librosa
-# import librosa.display
-# import numpy as np
-# import math
-# import os
-# import matplotlib.pyplot as plt
 import nemo
 import nemo.collections.asr as nemo_asr
 import wget
@@ -98,7 +86,6 @@ def exit_chat(sid, data):
 def request_for_text(sid, data):
     link = data['req_url'] + '/socket.io/request_for_text/output.txt'
     print(link)
-    # text = open('output.txt', 'r').read().decode('utf-8')
     sio.emit('response_for_text', {'text': link}, broadcast=True)
 
 
@@ -160,14 +147,12 @@ def data_from_client(sid, data):
         text = ds_stream.intermediateDecode()
         print(text)
         sio.emit('data_from_server', {'text': text}, broadcast=True)
-        # добавить room=sid для отправки перевода в какие-то конкретные комнаты
         sio.sleep()
         offset = end_offset
 
     with open("output.txt", "a") as f:  # запись id пользователя и итогового текста
         f.write(user_id + ': ' + text + '\n')
     f.close()
-    # sio.emit('pong_from_server', room=sid)
 
 
 def normal_format():
@@ -180,12 +165,8 @@ def normal_format():
 
     if rate != 16000:
         w.close()
-        # os.system("sox " + '--info' + ' audio_for_stt.wav')
         os.rename("audio_for_stt.wav", "old.wav")
         os.system("sox " + '-v 0.98' + ' old.wav' + " -G -r 16000 -c 1 -b 16 " + 'audio_for_stt.wav')
-        # -v 0.95 перепроверить (должно решать проблему: sox WARN dither: dither clipped 1 samples; decrease volume?)
-        # потери?
-        # os.system("sox " + '--info' + ' audio_for_stt.wav') # данные об итоговом wav файле
         os.remove("old.wav")
 
 
@@ -268,11 +249,6 @@ def get_link():
             Возвращаемое значение:
                     link:  ссылка на файл
     """
-    #frames = w.getnframes()
-    #buffer = w.readframes(frames)
-    # print(rate)
-    # print(model.sampleRate())  # частота дискретизации в выборках в секунду данных PCM
-    # type(buffer)
 
     data = request.json
     link = 'У вас нет доступа к данным'
@@ -310,67 +286,3 @@ if __name__ == '__main__':
     import eventlet.wsgi
 
     eventlet.wsgi.server(eventlet.listen(('127.0.0.1', HTTP_SERVER_PORT)), app)
-
-
-
-
-
-# data_dir = '.'
-
-#model.restore_from('/path/to/model.nemo')
-#https://docs.nvidia.com/deeplearning/nemo/user-guide/docs/en/main/asr/api.html
-#nemo.__version__
-#asr_model = nemo_asr.models.EncDecCTCModel.from_pretrained(model_name='QuartzNet15x5_golos.nemo', strict=False)
-'''quartznet = EncDecCTCModel.from_pretrained('QuartzNet15x5Base-En')
-
-files = ['audio_for_stt.wav'] # file duration should be less than 25 seconds
-
-for fname, transcription in zip(files, quartznet.transcribe(paths2audio_files=files)):
-    print(f"Audio in {fname} was recognized as: {transcription}")'''
-#print(EncDecCTCModel.list_available_models())
-
-#temp_cn = nemo_asr.models.EncDecCTCModel.restore_from(restore_path='QuartzNet15x5_golos.nemo')
-
-
-#quartznet =nemo_asr.modules.ConvASREncoder.restore_from("QuartzNet15x5_golos.nemo")
-#wave_file = ['audio_for_stt.wav']
-
-
-
-
-
-
-
-
-#quartznet = nemo_asr.models.restore_from(model_name="QuartzNet15x5_golos.nemo")
-#quartznet.transcribe(paths2audio_files=wave_file)
-#import nemo.collections.asr as nemo_asr
-#wave_file = ['/Users/dhanley/Downloads/male.wav']
-
-
-#for fname, transcription in zip(files, quartznet.transcribe(paths2audio_files=files)):
-#  print(f"Audio in {fname} was recognized as: {transcription}")
-'''data_dir = '.'
-print("******")
-if not os.path.exists(data_dir + '/an4_sphere.tar.gz'):
-    an4_url = 'http://www.speech.cs.cmu.edu/databases/an4/an4_sphere.tar.gz'
-    an4_path = wget.download(an4_url, data_dir)
-    print(f"Dataset downloaded at: {an4_path}")
-else:
-    print("Tarfile already exists.")
-    an4_path = data_dir + '/an4_sphere.tar.gz'
-
-if not os.path.exists(data_dir + '/an4/'):
-    # Untar and convert .sph to .wav (using sox)
-    tar = tarfile.open(an4_path)
-    tar.extractall(path=data_dir)
-
-    print("Converting .sph to .wav...")
-    sph_list = glob.glob(data_dir + '/an4/**/*.sph', recursive=True)
-    for sph_path in sph_list:
-        wav_path = sph_path[:-4] + '.wav'
-        cmd = ["sox", sph_path, wav_path]
-        subprocess.run(cmd)
-print("Finished conversion.\n******")'''
-
-#quartznet = nemo_asr.models.EncDecCTCModel.from_pretrained(model_name="QuartzNet15x5Base-En")
